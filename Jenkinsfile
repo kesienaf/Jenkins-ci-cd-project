@@ -43,18 +43,17 @@ pipeline {
         failure {
             echo 'Build failed! Email notification will be sent.'
             script {
-            emailext subject: "Failed: ${currentBuild.fullDisplayName}",
-                      body: "Something went wrong. Please check the build logs.",
-                      to: "kesienafels@gmail.com"
-            }
+                emailext subject: "Failed: ${currentBuild.fullDisplayName}",
+                        body: "Something went wrong. Please check the build logs.",
+                        to: "kesienafels@gmail.com"
         }
-        
+    }
         success {
             echo 'Build successful! Email notification will be sent.'
             script {
             emailext subject: "Success: ${currentBuild.fullDisplayName}",
-                      body: "Build was successful. Congratulations!",
-                      to: "kesienafels@gmail.com"
+                    body: "Build was successful. Congratulations!",
+                    to: "kesienafels@gmail.com"
             }
         }
     }
