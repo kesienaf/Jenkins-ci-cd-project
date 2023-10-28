@@ -33,19 +33,24 @@ pipeline {
                 sh "~/apache-tomcat-7.0.94/bin/startup.sh"
                 sh "sudo rm -rf ~/apache*/webapp/*.war" 
                 sh "sudo mv target/*.war ~/apache*/webapps/"
-                sh "~/apache-tomcat-7.0.94/bin/shutdown.sh"
+                sh "systemctl daemon-reload"
+                // sh "~/apache-tomcat-7.0.94/bin/shutdown.sh"
                 sh "~/apache-tomcat-7.0.94/bin/startup.sh"
             }
         }
     }
     post {
         success {
-            echo 'Pipeline succeeded! Send success notification.'
-            // Additional success actions
+            emailext subject: 'Deployment Successful',
+                      body: 'The deployment was successful. Please verify the application.',
+                      to: 'kesienafels@gmail.com',
+                      from: 'jenkins@example.com'
         }
         failure {
-            echo 'Pipeline failed! Send failure notification.'
-            // Additional failure actions
+            emailext subject: 'Deployment Failed',
+                      body: 'The deployment failed. Please check the Jenkins build logs for more information.',
+                      to: 'kesienafels@gmail.com',
+                      from: 'jenkins@example.com'
         }
     }
 }
