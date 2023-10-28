@@ -42,15 +42,17 @@ pipeline {
     post {
         failure {
             echo 'Build failed! Email notification will be sent.'
-            emailext body: "Something went wrong. Please check the build logs.",
-                subject: "Failed: ${currentBuild.fullDisplayName}",
-                to: "kesienafels@gmail.com"
+            emailext subject: 'Build Successful - ${currentBuild.fullDisplayName}',
+                     body: 'Congratulations! The build was successful.\n\nCheck console output at ${BUILD_URL}',
+                     to: 'kesienafels@gmail.com',
+                     mimeType: 'plain'
         }
         success {
             echo 'Build successful! Email notification will be sent.'
-            emailext body: "Build was successful. Congratulations!",
-                subject: "Success: ${currentBuild.fullDisplayName}",
-                to: "kesienafels@gmail.com"
+            emailext subject: 'Build Successful - ${currentBuild.fullDisplayName}',
+                     body: 'Congratulations! The build was successful.\n\nCheck console output at ${BUILD_URL}',
+                     to: 'kesienafels@gmail.com',
+                     mimeType: 'plain'
             }
         }
     }
