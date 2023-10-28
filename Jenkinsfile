@@ -40,19 +40,20 @@ pipeline {
         }
     }
     post {
-        failure {
-            echo 'Build failed! Email notification will be sent.'
-            emailext subject: 'Build Successful - ${currentBuild.fullDisplayName}',
-                     body: 'Congratulations! The build was successful.\n\nCheck console output at ${BUILD_URL}',
-                     to: 'kesienafels@gmail.com',
-                     mimeType: 'plain'
-        }
         success {
-            echo 'Build successful! Email notification will be sent.'
-            emailext subject: 'Build Successful - ${currentBuild.fullDisplayName}',
-                     body: 'Congratulations! The build was successful.\n\nCheck console output at ${BUILD_URL}',
-                     to: 'kesienafels@gmail.com',
-                     mimeType: 'plain'
+            script {
+                // Send email for successful build
+                mail to: 'kesienafels@gmail.com',
+                     subject: "Build Successful - ${currentBuild.fullDisplayName}",
+                     body: "Congratulations! The build was successful.\n\nCheck console output at ${BUILD_URL}"
+            }
+        }
+        failure {
+            script {
+                // Send email for failed build
+                mail to: 'kesienafels@gmail.com',
+                     subject: "Build Failed - ${currentBuild.fullDisplayName}",
+                     body: "Oops! The build failed.\n\nCheck console output at ${BUILD_URL}"
             }
         }
     }
