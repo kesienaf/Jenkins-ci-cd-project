@@ -35,7 +35,7 @@ pipeline {
 
                     if (warFileName) {
                         echo "Found .war file: ${warFileName}"
-                        sh "scp -i ${kesienaf.pem} target/${warFileName} ${centos}@${172.31.35.225}:/home/centos/apache-tomcat-7.0.94/webapps"
+                        sh "scp -i ${kesienaf.pem} target/${warFileName} ${centos}@'172.31.35.225':/home/centos/apache-tomcat-7.0.94/webapps"
                         sh "~/apache-tomcat-7.0.94/bin/shutdown.sh && ~/apache-tomcat-7.0.94/bin/startup.sh"
                     } else {
                         error 'No .war file found in the target directory.'
