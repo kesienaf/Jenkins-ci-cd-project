@@ -39,41 +39,17 @@ pipeline {
             }
         }
     }
-post {
-        success {
-            script {
-                def buildNumber = currentBuild.number
-                def buildStatus = currentBuild.result
-                def jobName = env.JOB_NAME
-                
-                emailext subject: "Deployment Successful - Build #${buildNumber} - ${buildStatus}",
-                          body: """
-                                Job Name: ${jobName}
-                                Build Number: ${buildNumber}
-                                Build Status: ${buildStatus}
-                                
-                                Console Output:
-                                ${Jenkins.instance.getItemByFullName(jobName).getBuildByNumber(buildNumber).log}
-                              """,
-                          to: 'kesienafels@gmail.com'
-            }
-        }
+    post {
         failure {
-            script {
-                def buildNumber = currentBuild.number
-                def buildStatus = currentBuild.result
-                def jobName = env.JOB_NAME
-                
-                emailext subject: "Deployment Failed - Build #${buildNumber} - ${buildStatus}",
-                          body: """
-                                Job Name: ${jobName}
-                                Build Number: ${buildNumber}
-                                Build Status: ${buildStatus}
-                                
-                                Console Output:
-                                ${Jenkins.instance.getItemByFullName(jobName).getBuildByNumber(buildNumber).log}
-                              """,
-                          to: 'kesienafels@gmail.com'
+            emailext subject: 'Failed: ${currentBuild.fullDisplayName}',
+                      body: 'Something went wrong. Please check the build logs.',
+                      to: 'kesienafels@gmail.com'
+        }
+        
+        success {
+            emailext subject: 'Success: ${currentBuild.fullDisplayName}',
+                      body: 'Build was successful. Congratulations!',
+                      to: 'kesienafels@gmail.com'
         }
     }
 }
