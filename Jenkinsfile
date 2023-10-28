@@ -26,12 +26,12 @@ pipeline {
                 label 'Node 2'
             }
             steps {
-                 script {
+                script {
                     def remoteServer = '172.31.11.28' // Replace with your remote server's IP or hostname
                     def remoteUser = 'centos' // Replace with your remote server's username
                     def pemFilePath = 'kesienaf.pem' // Replace with the path to your .pem file
 
-                     def warFile = findFiles(glob: '/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target/*.war').first()
+                    def warFile = findFiles(glob: '/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target/*.war').first()
 
                     if (warFile) {
                         def warFileName = warFile.getName()
@@ -52,18 +52,18 @@ pipeline {
                     } else {
                         error 'No .war file found in the target directory.'
                     }
+                }
             }
         }
     }
-                post {
-                    success {
-                        echo 'Pipeline succeeded! Send success notification.'
-                        // Additional success actions
-                    }
-                    failure {
-                        echo 'Pipeline failed! Send failure notification.'
-                        // Additional failure actions
+    post {
+        success {
+            echo 'Pipeline succeeded! Send success notification.'
+            // Additional success actions
+        }
+        failure {
+            echo 'Pipeline failed! Send failure notification.'
+            // Additional failure actions
         }
     }
 }
-    }
