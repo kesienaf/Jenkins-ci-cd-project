@@ -33,7 +33,8 @@ pipeline {
                 sh "~/apache-tomcat-7.0.94/bin/shutdown.sh && ~/apache-tomcat-7.0.94/bin/startup.sh"
                 sh "sudo rm -rf ~/apache*/webapp/*.war" 
                 sh "sudo mv target/*.war ~/apache*/webapps/"
-                sh "~/apache-tomcat-7.0.94/bin/shutdown.sh && ~/apache-tomcat-7.0.94/bin/startup.sh"
+                sh "~/apache-tomcat-7.0.94/bin/shutdown.sh"
+                sh "~/apache-tomcat-7.0.94/bin/startup.sh"
             }
         }
     }
