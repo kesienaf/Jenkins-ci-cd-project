@@ -19,6 +19,7 @@ pipeline {
                 echo 'Running tests'
                 // Define test steps here
                 sh 'mvn test'
+                stash (name: 'JenkinsProject', includes: "target/*.war")
             }
         }
         stage('Deploy') {
@@ -26,37 +27,23 @@ pipeline {
                 label 'Node 2'
             }
             steps {
-                script {
-                    def remoteServer = '172.31.11.28' // Replace with your remote server's IP or hostname
-                    def remoteUser = 'centos' // Replace with your remote server's username
-                    def pemFilePath = '/home/centos/kesienaf.pem' // Replace with the path to your .pem file
-
-                    // Use the dir step to change into the target directory
-                    ls('/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target') {
-                    // Use glob to get the war file
-                    def warFile = sh(script: 'ls /home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target/*.war', returnStatus: true).trim()
-
-                    if (warFile) {
-                        echo "Found .war file: ${warFile}"
-                    
-                        def remoteDirectory = "/home/centos/apache-tomcat-7.0.94/webapps"
-                    
-                        sh """
-                            scp -i ${/home/centos/kesienaf.pem} \
-                            '/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target/${warFileName}' \
-                            ${centos}@172.31.35.225:${remoteDirectory}
-                        """
-                    
-                        sh """
-                            ${remoteDirectory}/../bin/shutdown.sh && \
-                            ${remoteDirectory}/../bin/startup.sh
-                        """
-                    } else {
-                        error 'No .war file found in the target directory.'
-                    }
-                }
+                echo 'Deploying the application'
+                // Define deployment steps here
+                unstash 'JenkinsProject'
+                sh "sudo rm -rf ~/apache*/webapp/*.war" 
+                sh "sudo mv target/*.war ~/apache*/webapps/"
+                sh "~/apache-tomcat-7.0.94/bin/shutdown.sh && ~/apache-tomcat-7.0.94/bin/startup.sh"
             }
         }
     }
+    post {
+        success {
+            echo 'Pipeline succeeded! Send success notification.'
+            // Additional success actions
+        }
+        failure {
+            echo 'Pipeline failed! Send failure notification.'
+            // Additional failure actions
         }
     }
+}
