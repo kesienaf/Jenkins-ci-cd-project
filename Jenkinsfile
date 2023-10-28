@@ -39,18 +39,41 @@ pipeline {
             }
         }
     }
-    post {
+post {
         success {
-            emailext subject: 'Deployment Successful',
-                      body: 'The deployment was successful. Please verify the application.',
-                      to: 'kesienafels@gmail.com',
-                      from: 'jenkins@example.com'
+            script {
+                def buildNumber = currentBuild.number
+                def buildStatus = currentBuild.result
+                def jobName = env.JOB_NAME
+                
+                emailext subject: "Deployment Successful - Build #${buildNumber} - ${buildStatus}",
+                          body: """
+                                Job Name: ${jobName}
+                                Build Number: ${buildNumber}
+                                Build Status: ${buildStatus}
+                                
+                                Console Output:
+                                ${Jenkins.instance.getItemByFullName(jobName).getBuildByNumber(buildNumber).log}
+                              """,
+                          to: 'kesienafels@gmail.com'
+            }
         }
         failure {
-            emailext subject: 'Deployment Failed',
-                      body: 'The deployment failed. Please check the Jenkins build logs for more information.',
-                      to: 'kesienafels@gmail.com',
-                      from: 'jenkins@example.com'
+            script {
+                def buildNumber = currentBuild.number
+                def buildStatus = currentBuild.result
+                def jobName = env.JOB_NAME
+                
+                emailext subject: "Deployment Failed - Build #${buildNumber} - ${buildStatus}",
+                          body: """
+                                Job Name: ${jobName}
+                                Build Number: ${buildNumber}
+                                Build Status: ${buildStatus}
+                                
+                                Console Output:
+                                ${Jenkins.instance.getItemByFullName(jobName).getBuildByNumber(buildNumber).log}
+                              """,
+                          to: 'kesienafels@gmail.com'
         }
     }
 }
