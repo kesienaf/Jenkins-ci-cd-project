@@ -46,7 +46,6 @@ pipeline {
                 to: "kesienafels@gmail.com"
                     emailext subject: "Failed: ${currentBuild.fullDisplayName}",
                     body: "Something went wrong. Please check the build logs.",
-            }
     }
         success {
             echo 'Build successful! Email notification will be sent.'
