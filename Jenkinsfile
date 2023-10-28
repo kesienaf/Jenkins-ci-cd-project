@@ -34,7 +34,7 @@ pipeline {
                     // Use the dir step to change into the target directory
                     dir('/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target') {
                     // Use glob to get the war file
-                    def warFile = bat(script: 'dir *.war /b', returnStatus: true).trim()
+                    def warFile = sh(script: 'dir *.war /b', returnStatus: true).trim()
 
                     if (warFile) {
                         echo "Found .war file: ${warFile}"
