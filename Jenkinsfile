@@ -31,14 +31,27 @@ pipeline {
                     def remoteUser = 'centos' // Replace with your remote server's username
                     def pemFilePath = 'kesienaf.pem' // Replace with the path to your .pem file
 
-                    def warFileName = sh(script: "ls -t /home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target/*.war | head -n 1", returnStdout: true).trim() 
+                     def warFile = findFiles(glob: '/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target/*.war').first()
 
-                    if (warFileName) {
+                    if (warFile) {
+                        def warFileName = warFile.getName()
                         echo "Found .war file: ${warFileName}"
-                        sh "scp -i ${kesienaf.pem} /home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target/${warFileName} ${centos}@172.31.35.225:/home/centos/apache-tomcat-7.0.94/webapps"
-                        sh "~/apache-tomcat-7.0.94/bin/shutdown.sh && ~/apache-tomcat-7.0.94/bin/startup.sh"
+                    
+                        def remoteDirectory = "/home/centos/apache-tomcat-7.0.94/webapps"
+                    
+                        sh """
+                            scp -i ${kesienaf.pem} \
+                            '/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target/${warFileName}' \
+                            ${centos}@172.31.35.225:${remoteDirectory}
+                        """
+                    
+                        sh """
+                            ${remoteDirectory}/../bin/shutdown.sh && \
+                            ${remoteDirectory}/../bin/startup.sh
+                        """
                     } else {
                         error 'No .war file found in the target directory.'
+                    }
             }
         }
     }
