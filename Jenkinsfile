@@ -42,19 +42,20 @@ pipeline {
     post {
         failure {
             echo 'Build failed! Email notification will be sent.'
-            emailext body: '${SCRIPT, template="groovy-html.template"}',
-                      recipientProviders: [[$class: 'CulpritsRecipientProvider']],
-                      subject: "Failed: ${currentBuild.fullDisplayName}",
-                      to: 'kesienafels@gmail.com'
+            script {
+            emailext subject: "Failed: ${currentBuild.fullDisplayName}",
+                      body: "Something went wrong. Please check the build logs.",
+                      to: "kesienafels@gmail.com"
+            }
         }
         
         success {
             echo 'Build successful! Email notification will be sent.'
-            emailext body: '${SCRIPT, template="groovy-html.template"}',
-                      recipientProviders: [[$class: 'CulpritsRecipientProvider']],
-                      subject: "Success: ${currentBuild.fullDisplayName}",
-                      to: 'kesienafels@gmail.com'
+            script {
+            emailext subject: "Success: ${currentBuild.fullDisplayName}",
+                      body: "Build was successful. Congratulations!",
+                      to: "kesienafels@gmail.com"
+            }
         }
     }
 }
-
