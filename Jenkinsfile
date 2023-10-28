@@ -29,12 +29,12 @@ pipeline {
                 script {
                     def remoteServer = '172.31.11.28' // Replace with your remote server's IP or hostname
                     def remoteUser = 'centos' // Replace with your remote server's username
-                    def pemFilePath = 'kesienaf.pem' // Replace with the path to your .pem file
+                    def pemFilePath = '/home/centos/kesienaf.pem' // Replace with the path to your .pem file
 
                     // Use the dir step to change into the target directory
-                    dir('/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target') {
+                    ls('/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target') {
                     // Use glob to get the war file
-                    def warFile = sh(script: 'dir *.war /b', returnStatus: true).trim()
+                    def warFile = sh(script: 'ls /home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target/*.war', returnStatus: true).trim()
 
                     if (warFile) {
                         echo "Found .war file: ${warFile}"
@@ -42,7 +42,7 @@ pipeline {
                         def remoteDirectory = "/home/centos/apache-tomcat-7.0.94/webapps"
                     
                         sh """
-                            scp -i ${kesienaf.pem} \
+                            scp -i ${/home/centos/kesienaf.pem} \
                             '/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target/${warFileName}' \
                             ${centos}@172.31.35.225:${remoteDirectory}
                         """
