@@ -1,23 +1,43 @@
+
 pipeline {
-    agent any
+    agent none
     stages {
         stage('Build') {
+            agent {
+                label 'Node 1'
+            }
             steps {
-                echo 'Building the application'
-                // Add your build commands here
+                // Define build steps here
+                sh 'make'
             }
         }
         stage('Test') {
+            agent {
+                label 'Node 1'
+            }
             steps {
-                echo 'Running tests'
-                // Add your test commands here
+                // Define test steps here
+                sh 'make test'
             }
         }
         stage('Deploy') {
-            steps {
-                echo 'Deploying the application'
-                // Add your deployment commands here
+            agent {
+                label 'Node '
             }
+            steps {
+                // Define deployment steps here
+                sh 'make deploy'
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Pipeline succeeded! Send success notification.'
+            // Additional success actions
+        }
+        failure {
+            echo 'Pipeline failed! Send failure notification.'
+            // Additional failure actions
         }
     }
 }
