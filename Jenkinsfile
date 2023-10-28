@@ -7,8 +7,9 @@ pipeline {
                 label 'Node 1'
             }
             steps {
+                echo 'Building the application'
                 // Define build steps here
-                sh 'make'
+                sh '/opt/maven/bin/mvn clean package'
             }
         }
         stage('Test') {
@@ -16,17 +17,19 @@ pipeline {
                 label 'Node 1'
             }
             steps {
+                echo 'Running tests'
                 // Define test steps here
-                sh 'make test'
+                sh 'mvn test'
             }
         }
         stage('Deploy') {
             agent {
-                label 'Node '
+                label 'Node 2'
             }
             steps {
+                echo 'Deploying the application'
                 // Define deployment steps here
-                sh 'make deploy'
+                sh '~/apache-tomcat-7.0.94/bin/startup.sh'
             }
         }
     }
