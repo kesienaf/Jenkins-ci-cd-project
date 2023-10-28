@@ -31,11 +31,13 @@ pipeline {
                     def remoteUser = 'centos' // Replace with your remote server's username
                     def pemFilePath = 'kesienaf.pem' // Replace with the path to your .pem file
 
-                    def warFile = findFiles(glob: '/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target/*.war').first()
+                    // Use the dir step to change into the target directory
+                    dir('/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target') {
+                    // Use glob to get the war file
+                    def warFile = bat(script: 'dir *.war /b', returnStatus: true).trim()
 
                     if (warFile) {
-                        def warFileName = warFile.getName()
-                        echo "Found .war file: ${warFileName}"
+                        echo "Found .war file: ${warFile}"
                     
                         def remoteDirectory = "/home/centos/apache-tomcat-7.0.94/webapps"
                     
