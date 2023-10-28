@@ -31,7 +31,7 @@ pipeline {
                     def remoteUser = 'centos' // Replace with your remote server's username
                     def pemFilePath = 'kesienaf.pem' // Replace with the path to your .pem file
 
-                    def warFileName = sh(script: "ls -t '/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target/'*.war | head -n 1", returnStdout: true).trim() 
+                    def warFileName = sh(script: "ls -t '/home/centos/workspace/Jenkins-ci-cd-project-Kess-Kemi/target'/*.war | head -n 1", returnStdout: true).trim() 
 
                     if (warFileName) {
                         echo "Found .war file: ${warFileName}"
