@@ -1,4 +1,3 @@
-
 pipeline {
     agent none
     stages {
@@ -27,9 +26,19 @@ pipeline {
                 label 'Node 2'
             }
             steps {
-                echo 'Deploying the application'
-                // Define deployment steps here
-                sh "~/apache-tomcat-7.0.94/bin/shutdown.sh && ~/apache-tomcat-7.0.94/bin/startup.sh"
+                 script {
+                    def remoteServer = '172.31.11.28' // Replace with your remote server's IP or hostname
+                    def remoteUser = 'centos' // Replace with your remote server's username
+                    def pemFilePath = 'kesienaf.pem' // Replace with the path to your .pem file
+
+                    def warFileName = sh(script: "find target -name '*.war' | head -n 1 | xargs -I {} basename {}", returnStdout: true).trim()
+
+                    if (warFileName) {
+                        echo "Found .war file: ${warFileName}"
+                        sh "scp -i ${kesienaf.pem} target/${warFileName} ${centos}@${172.31.35.225}:/path/to/remote/webapps"
+                        sh "~/apache-tomcat-7.0.94/bin/shutdown.sh && ~/apache-tomcat-7.0.94/bin/startup.sh"
+                    } else {
+                        error 'No .war file found in the target directory.'
             }
         }
     }
