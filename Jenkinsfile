@@ -55,14 +55,14 @@ pipeline {
             }
         }
     }
-        post {
-            success {
-                echo 'Pipeline succeeded! Send success notification.'
-                // Additional success actions
-            }
-            failure {
-                echo 'Pipeline failed! Send failure notification.'
-                // Additional failure actions
+            post {
+                success {
+                    echo 'Pipeline succeeded! Send success notification.'
+                    // Additional success actions
+                }
+                failure {
+                    echo 'Pipeline failed! Send failure notification.'
+                    // Additional failure actions
         }
     }
 }
