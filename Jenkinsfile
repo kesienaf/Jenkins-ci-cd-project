@@ -29,7 +29,7 @@ pipeline {
             steps {
                 echo 'Deploying the application'
                 // Define deployment steps here
-                sh '~/apache-tomcat-7.0.94/bin/startup.sh'
+                sh "~/apache-tomcat-7.0.94/bin/shutdown.sh && ~/apache-tomcat-7.0.94/bin/startup.sh"
             }
         }
     }
